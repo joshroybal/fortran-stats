@@ -1,22 +1,24 @@
 FC = gfortran
-#FCFLAGS = -g -Werror
-#FLFLAGS =
-FCFLAGS = -O2 -Werror
-FLFLAGS = -static -s
-program = driver
+FCFLAGS = -g -Werror
+FLFLAGS =
+#FCFLAGS = -O2 -Werror
+#FLFLAGS = -static -s
+program = stats_demo
 objects = driver.o io.o report.o stats.o
-module = stats.mod
 
 $(program): $(objects)
 	$(FC) $(FLFLAGS) $^ -o $(program)
 
-driver.o: stats.o $(module)
+driver.o: driver.f90 stats.o
+	$(FC) $(FCFLAGS) -c $<
 
-report.o: stats.o $(module)
+report.o: report.f90 stats.o
+	$(FC) $(FCFLAGS) -c $<
 
-$(module): stats.o
+io.o: io.f90
+	$(FC) $(FCFLAGS) -c $<
 
-%.o: %.f95
+stats.o: stats.f90
 	$(FC) $(FCFLAGS) -c $<
 
 .PHONY : clean
